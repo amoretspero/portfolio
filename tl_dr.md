@@ -1,0 +1,141 @@
+# THE portfolio
+
+## Introduction
+
+- Name: Jiung Hahm
+- Email: amoretspero (at) gmail (dot) com
+  - Alternative: amoretspero (at) snu (dot) ac (dot) kr
+- Github: [https://github.com/amoretspero](https://github.com/amoretspero)
+
+## Educations
+
+### University
+
+- 서울대학교 공과대학 컴퓨터공학부 (Undergraduate)
+  - Enrollment: Mar. 2013.
+  - (Expected) Graduation: Feb. 2022. (Bachelor's)
+  - GPA: 3.69/4.3 (as of Aug. 2021.)
+
+## Work experiences
+
+### Experiences at (주)오너클랜
+
+- 회사 주요 업무: 오픈마켓에서 활동하는 소규모 판매자들을 위한 도매 중개업  
+
+#### Internal / Open API 서비스 및 서버 개발
+
+- Skills
+  - Server Runtime: Node.js
+  - Programming Language: Typescript
+  - API type: GraphQL
+  - CI/CD: Gitlab CI/CD
+  - Cloud Service Provider: Google Cloud Platform
+- GCP Kubernetes Engine를 사용해 프로토타입 개발 및 초기 서비스 운영 후 네트워크 트래픽 등의 문제로 사내 서버로 이전 운영
+- 서비스 운영 시 일평균 2M requests, 초당 최대 150-200 requests 처리
+  - Single server / PM2 cluster 사용
+- Quota 제한을 위해 Redis 기반의 사용량 제한 서비스 구현
+- API 서비스 오픈 후 오픈 전 대비 웹사이트의 불필요한 스크랩 트래픽 80% 이상 감소
+
+#### 회사 주요 서비스 리뉴얼 작업
+
+- Skills
+  - Server Runtime: Node.js
+  - Programming Language: Typescript
+  - API type: GraphQL
+  - Database: MySQL
+  - CI/CD: Gitlab CI
+- 서비스 요구사항 분석 내용에 따른 DB 스키마 재구축
+  - TypeORM 패키지를 이용한 스키마 정의
+  - 리뉴얼에 필요한 DB migration 코드 작성
+- Node.js 및 TypeScript, GraphQL을 기반으로 한 API 서버 구현
+  - GraphQL type 정의 및 resolver 구현 등 GraphQL을 기반으로 한 API 서버에서 구현해야 하는 대부분을 담당
+  - GraphQL `query`에 대한 TypeScript decorator 기반의 GraphQL query to MySQL query parser 구현
+    - GraphQL API 서비스 개발시 data fetch/format 과정의 코드 약 80% 이상 감소
+
+#### 이미지 제공 전용 서버 개발 및 CDN 연동
+
+- Skills
+  - Server Runtime: Node.js
+  - Cloud Service Provider: Google Cloud Platform
+  - CDN Provider: Akamai CDN(main) / GCP CDN(backup)
+  - CI/CD: Gitlab CI/CD
+  - CDN의 경우 Akamai CDN을 기본으로 하되 Akamai CDN에 대한 failover로 GCS CDN을 사용할 수 있도록 추가 구현
+  - GCP의 경우 Storage, Kubernetes Engine 서비스를 주로 사용.
+- 웹사이트에서 제공하는 이미지 및 외부에 제공하는 이미지의 트래픽을 줄이기 위해 CDN 연동
+- 사용자가 업로드한 원본 이미지 1개로 여러 사이즈의 request에 대응할 수 있도록 URL-based dynamic resizing/rotation 구현
+  - CDN caching을 위해 사전 정의된 사이즈 이외의 요청은 거절
+- GCP Kubernetes Engine에서 제공하는 Cluster auto-scaling / Container pod auto-scaling 적용
+
+#### 상품 유사도 확인 프로그램 개발
+
+- Skills
+  - Server Runtime: Dotnet Core
+  - Programming Language: C#
+  - Cloud Service Provider: Google Cloud Platform
+    - 사내 서버 자원 대용으로 GCP의 Compute Engine만 사용
+- 상품 데이터 중 선택된 항목들에 대해 LSH(Locality Sensitive Hashing) algorithm / Min hashing을 적용해 유사도 계산
+- Cron 작업으로 일정 주기마다 전체 상품에 대해 계산하도록 구현
+- 계산된 유사도를 바탕으로 동일상품으로 의심되는 경우 관리자에게 리포트하여 조치를 취하고, 유사한 상품의 정보는 사용자에게 제공
+
+### Experiences at (주)스카이시드
+
+- 회사 주요 업무: 웹서비스 개발 및 마케팅 외주 / 학원업
+
+#### 2013.12 - 2016.01
+
+- 마케팅 외주 업무 지원
+
+#### 2016.01 - 2017.08
+
+- 학원 수강생 관리 시스템 제작 (Ruby on Rails)
+  - 수강생 및 결제/등록 이력 DB 설계
+  - 대량 문자메시지 발송 프로그램 제작 및 OpenAPI 연동
+- 고등학생 대상 수학 강의
+
+## Skills
+
+- **굵게 처리된 내용**: 최근 자주 사용해서 익숙한 skill set
+- *이탤릭 처리된 내용*: 일에서 자주 사용하지는 않았으나 소규모 프로그램 개발 및 유지가 가능한 skill set
+- 그 이외: 주로 대학교 수업 프로젝트 등에 사용했거나, 한 번쯤 다뤄봤던 정도의 skill set
+
+### Programming Languages
+
+- **JavaScript / TypeScript**
+- **Python**
+- **SQL**(MySQL)
+- *C#*
+- *F#*
+- C/C++
+- Java
+- PHP
+
+### Frameworks / Databases
+
+- **Node.js**
+- **MySQL**
+- *Dotnet Framework / Dotnet Core*
+- ArangoDB
+
+### Others
+
+- **Google Cloud Platform**
+- **Nginx**
+- **React**
+- Azure
+
+## Interests
+
+- Programming Languages
+  - Typescript
+  - F#
+  - Python
+- Frameworks
+  - Dotnet Core
+  - Node.js
+  - Tensorflow
+- Others
+  - Functional Programming
+  - React/Recoil
+  - GraphQL
+  - Machine Learning
+  - Quantum Computing

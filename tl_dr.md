@@ -1,4 +1,4 @@
-# THE portfolio
+# THE portfolio - TL;DR version
 
 ## Introduction
 
@@ -7,7 +7,7 @@
   - Alternative: amoretspero (at) snu (dot) ac (dot) kr
 - Github: [https://github.com/amoretspero](https://github.com/amoretspero)
 
-## Educations
+## Education
 
 ### University
 
@@ -16,9 +16,9 @@
   - (Expected) Graduation: Feb. 2022. (Bachelor's)
   - GPA: 3.69/4.3 (as of Aug. 2021.)
 
-## Work experiences
+## Work Experience
 
-### Experiences at (주)오너클랜
+### (주)오너클랜
 
 - 회사 주요 업무: 오픈마켓에서 활동하는 소규모 판매자들을 위한 도매 중개업  
 
@@ -36,7 +36,7 @@
 - Quota 제한을 위해 Redis 기반의 사용량 제한 서비스 구현
 - API 서비스 오픈 후 오픈 전 대비 웹사이트의 불필요한 스크랩 트래픽 80% 이상 감소
 
-#### 회사 주요 서비스 리뉴얼 작업
+#### 회사 주요 서비스 리뉴얼 작업 - 백엔드
 
 - Skills
   - Server Runtime: Node.js
@@ -77,7 +77,7 @@
 - Cron 작업으로 일정 주기마다 전체 상품에 대해 계산하도록 구현
 - 계산된 유사도를 바탕으로 동일상품으로 의심되는 경우 관리자에게 리포트하여 조치를 취하고, 유사한 상품의 정보는 사용자에게 제공
 
-### Experiences at (주)스카이시드
+### (주)스카이시드
 
 - 회사 주요 업무: 웹서비스 개발 및 마케팅 외주 / 학원업
 

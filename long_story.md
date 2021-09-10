@@ -63,6 +63,8 @@ API 서비스 오픈 후 회사 서비스 사용자들 중 Open API를 사용해
 
 #### 회사 주요 서비스 리뉴얼 작업 - 백엔드
 
+(TODO: query-format wrapper 사용 예시 추가(feed))
+
 PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 기능을 적용시키는 동시에 핵심 서비스 코드를 모두 새로 구현하는 리뉴얼을 진행했습니다. 크게 데이터 마이그레이션, 신규 API 서버 개발, 신규 프론트엔드 개발 부분으로 나누어 작업했고, 데이터 마이그레이션 일부와 신규 API 서버 개발을 담당했습니다.
 
 각 부분에서 담당한 역할과 기술 사항은 다음과 같습니다.
@@ -87,6 +89,8 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
 
 #### 이미지 제공 전용 서버 개발 및 CDN 연동
 
+(TODO: URL, image transform result gif로 만들어서 첨부)
+
 이 프로젝트를 진행하기 전에는 사용자가 이미지를 어떤 용도로든 업로드하게 되면, 실제로 사용될 이미지의 크기에 맞춰 미리 서버에서 변환한 후에 원본 이미지를 보관하지 않는 방식으로 처리했습니다. 그러나 원본 정보의 손실 및 미리 변환하는 overhead에서 나오는 사용자 경험 저하, 지원해야 하는 사이즈가 커질 경우에 대비하기 어려운 점 등의 문제가 있었습니다. 따라서 이를 해결하기 위해 원본 이미지를 보관함과 더불어 요청에 맞게 이미지를 resizing 및 transform 후 제공하는 서비스를 만들었습니다. 또한 이와 함께 트래픽 비용 절감을 위해 요청 가능한 이미지의 사이즈를 미리 정해 해당 이미지들이 caching이 가능하도록 한 다음 CDN까지 연결해서 실제 이미지 전용 서버로 들어오는 트래픽과 비용의 감소, 전체 서비스 단위에서의 비용 감소를 달성할 수 있었습니다.
 
 - Skills
@@ -103,6 +107,19 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
   - `https://cdn.example.com/image_name/resize/1920/1080/rotate/90/as/new_image.jpg`
 - GCP Kubernetes Engine에서 제공하는 Cluster auto-scaling / Container pod auto-scaling를 적용해서 부하가 많으면 Cluster의 VM 수와 pod 숫자를 늘려서 대응하고 부하가 적으면 줄여서 비용을 절감하도록 했습니다.
   - Cluster와 Pod size의 경우 급격하게 로드가 증가할 때 일정 수준 이하의 response time을 확보하기 위해서 PAESSLER의 [Webserver Stress Tool](https://www.paessler.com/tools/webstress)를 사용해 stress test를 간단하게나마 진행한 결과를 반영했습니다. 예상 가능한 최대 부하를 기준으로 테스트를 진행했을 때 Up scaling이 진행되는 중에도 response time이 허용치를 넘어가는 경우는 일정 수준 이하가 되도록 Cluster와 pod의 minimum size를 지정했습니다.
+
+Examples:
+- Original image: ![Original image](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/coffee.jpg)
+  - Credit: Photo by [Nolan Issac on Unsplash](https://unsplash.com/photos/It0DCaCBr40)
+- Resize to `{height: 1280, width: 1920}`
+  - `https://cdn.example.com/image_name/resize/1920/1280/as/new_image.jpg`
+  - Image: ![Resized to 1920 by 1280](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/coffee_resize_1920_1280.jpg)
+- Resize to `{height: 1280, width: 1920}`, rotated clockwise by 90 degree. Pad if necessary
+  - `https://cdn.example.com/image_name/resize/1920/1280/rotate/90/as/new_image.jpg`
+  - Image: ![Resized to 1920 by 1280, rotate by 90 degrees](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/coffee_resize_1920_1280_rotate_90.jpg)
+- Resize to square, with `{height: 1920, width: 1920}` pad if necessary.
+  - `https://cdn.example.com/image_name/square_resize/1920/as/new_image.jpg`
+  - Image: ![Resized to 1920 by 1920, pad if necessary](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/coffee_square_resize_1920.jpg)
 
 #### 상품 유사도 확인 프로그램 개발
 
@@ -132,15 +149,34 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
     - 대량 문자메시지 발송 프로그램 제작 및 OpenAPI 연동
   - 혼자 연습삼아 만들었던 것들을 제외하고는 실제로 쓰기 위해 학교 외부에서 진행한 첫 프로젝트인만큼 많은 부분을 구현하지는 않았으나 여러가지 기본적인 개념을 익힐 수 있었던 프로젝트 참여였습니다.
 - 자기소개서 작성 지원 웹서비스 개발
+  - (TODO: 작동 이미지 추가)
   - .NET Framework와 C#으로 개발한 프로젝트입니다. 규모는 작으나 DB 스키마 설계부터 서버 작업 및 [Razor Syntax](https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-5.0) 기반으로 간단한 프론트엔드까지 직접 제작했습니다. 제공하는 기능은 다음과 같습니다.
     - 사용자의 경우 회원가입 / 자기소개서 작성 및 저장 / 자기소개서 인쇄 기능
     - 관리자의 경우 사용자가 동의한 자기소개서 열람 / 회원 관리 / 자기소개서 작성 관련 정보 편집 기능
   - 당시에 React/Vue 등을 접하지 못해 별도의 프론트엔드 프레임워크는 사용하지 않았고 ASP.NET에서 제공하는 Razor syntax를 활용해서 MVC 구조로 개발했습니다.
+- 도서 원고 버전관리 웹서비스
+  - TODO:
+- 고등학교 수학 기출문제 분류 관리 웹서비스
+  - TODO:
 - 고등학생 대상 수학 강의
 
 #### 2013.12 - 2016.01
 
 - 마케팅 외주 업무 지원
+
+## Personal / Toy projects
+
+### Periodic Dataloader
+
+- TODO:
+
+### FSharp Linear Algebra
+
+- TODO:
+
+### Hml Equation Parser
+
+- TODO:
 
 ## Skills
 

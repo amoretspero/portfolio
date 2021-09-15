@@ -63,8 +63,6 @@ API 서비스 오픈 후 회사 서비스 사용자들 중 Open API를 사용해
 
 #### 회사 주요 서비스 리뉴얼 작업 - 백엔드
 
-(TODO: query-format wrapper 사용 예시 추가(feed))
-
 PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 기능을 적용시키는 동시에 핵심 서비스 코드를 모두 새로 구현하는 리뉴얼을 진행했습니다. 크게 데이터 마이그레이션, 신규 API 서버 개발, 신규 프론트엔드 개발 부분으로 나누어 작업했고, 데이터 마이그레이션 일부와 신규 API 서버 개발을 담당했습니다.
 
 각 부분에서 담당한 역할과 기술 사항은 다음과 같습니다.
@@ -86,10 +84,168 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
 - Node.js 및 TypeScript, GraphQL을 기반으로 한 API 서버 구현
   - GraphQL API type 정의 및 resolver 구현 등 GraphQL을 기반으로 한 API 서버에서 구현해야 하는 대부분을 담당했습니다.
   - API 서버에서 DB 데이터를 가져오는 부분은 TypeORM에서 제공하는 기능을 통해 해결하려고 했으나, 개발을 진행하면서 속도가 지나치게 느리다는 단점을 발견했습니다. 이를 해결하기 위해 상대적으로 DB data write/read operation time의 영향이 적은 데이터 수정 및 삭제 작업은 그대로 TypeORM을 사용하고, 빠른 응답이 필요한 데이터 읽기와 관련된 부분에서는 TypeORM 대신 node.js에서 사용할 수 있는 mysql driver([node-mysql](https://github.com/mysqljs/mysql))을 이용했습니다. 하지만 이 경우 직접 작성해야 하는 코드가 늘어나는 단점이 있었기 때문에 이 문제를 해결하기 위해 직접 GraphQL `query`에 대한 TypeScript decorator 기반의 query-format wrapper를 구현하고 프로젝트에서 사용했습니다. 이 wrapper를 사용한 결과 몇 개의 decorator를 추가하고 특수한 경우들에 대해서만 DB 관련 코드를 작성하면 되었고, 결과적으로 GraphQL API 서비스 개발시 data fetch/format 과정의 코드를 절반 이상 감소시킬 수 있었습니다.
+  - query-format wrapper example:
+    - DB schema code:
+      ```typescript
+      @Entity()
+      export class Feed {
+          @PrimaryGeneratedColumn({ name: "key" })
+          public key: number;
+
+          @Column({ nullable: true })
+          public registeredAdminKey?: number | null;
+
+          @ManyToOne(() => Admin, { nullable: true, onDelete: "CASCADE" })
+          @JoinColumn({ name: "registeredAdminKey" })
+          public registeredAdmin?: Admin | null;
+
+          @Column({ type: "enum", enum: FeedResourceType })
+          public resourceType: FeedResourceType;
+
+          @Column({ type: "simple-array" })
+          public resourceKeys: number[];
+
+          @Column({ type: "text" })
+          public content: string;
+
+          @Column({ type: "enum", enum: FeedSeverity })
+          public severity: FeedSeverity;
+
+          @Column({ nullable: true, type: "enum", enum: FeedEndpoint })
+          public endpoint?: FeedEndpoint | null;
+
+          @ValidateIf((obj, val) => val !== undefined && val !== null)
+          @ArrayMinSize(1)
+          @Column({ nullable: true, type: "simple-array" })
+          public audienceKeys?: number[] | null;
+
+          @CreateDateColumn(CreatedAtColumnOption)
+          public createdAt: Date;
+
+          @Column(UpdatedAtColumnOption)
+          public checkedAt: Date;
+
+          public constructor(data?: IFeedCreateOpt) {
+              if (data) {
+                  this.registeredAdminKey = data.registeredAdminKey;
+                  this.resourceType = data.resourceType;
+                  this.resourceKeys = data.resourceKeys;
+                  this.content = data.content;
+                  this.severity = data.severity;
+                  this.audienceKeys = data.audienceKeys;
+                  this.endpoint = data.endpoint;
+              }
+          }
+      }
+      ```
+    - GraphQL entity code:
+      ```typescript
+      @DbEntity(model.Feed) // This is for query-format wrapper to know DB model's `Feed` is connected to this class that defines GraphQL entity.
+      @ObjectType({ description: "Feed", implements: Node })
+      export class Feed extends SingleKeyNode {
+          @Field({ description: "The time when this feed is created." })
+          public createdAt!: Date;
+
+          @Field(() => GraphQLTimestamp, { nullable: true, description: "The time when this feed is checked." })
+          public checkedAt?: Date | null;
+
+          @Field(() => model.FeedResourceType, { description: "Type of resource." })
+          public resourceType!: model.FeedResourceType;
+
+          @Field(() => String, { description: "Feed content." })
+          public content!: string;
+
+          @Field(() => model.FeedSeverity, { description: "Severity of feed." })
+          public severity!: model.FeedSeverity;
+
+          @Field(() => model.FeedEndpoint, { nullable: true, description: "If endpoint is specified, target endpoint." })
+          public endpoint?: model.FeedEndpoint | null;
+
+          public row: any;
+
+          @DbColumn({ selects: ["audienceKeys"] }) // This is for query-format wrapper to query specific column when this field is specified in GraphQL request.
+          @Field(() => [ID], { nullable: true, description: "If targeted to specific users, targets' IDs." })
+          public audienceIds(): string[] | null {
+              return this.row.audienceKeys === null ? null : (this.row.audienceKeys as string).split(",")
+                  .filter((rk) => rk && !/^\s*$/.test(rk))
+                  .map((rk) => toGlobalId("User", [rk]));
+          }
+
+          @DbColumn({ selects: ["resourceKeys", "resourceType"] }) // This is for query-format wrapper to query specific columns when this field is specified in GraphQL request.
+          @Field(() => [ID], { description: "If related resource exist, related resources' IDs." })
+          public resourceIds(): string[] {
+              return (this.row.resourceKeys as string).split(",")
+                  .filter((rk) => rk && !/^\s*$/.test(rk))
+                  .map((rk) => toGlobalId(this.row.resourceType, [rk]));
+          }
+      }
+      ```
+    - GraphQL resolver code:
+      ```typescript
+      @Resolver(Feed)
+      export class FeedResolver {
+          private service: FeedService;
+
+          public constructor() {
+              this.service = new FeedService();
+          }
+
+          // #region FieldResolvers
+
+          @Visibility(
+              [Endpoint.Admin],
+              FieldResolver(() => Admin, {
+                  complexity: fieldResolverComplexityEstimator(1),
+                  description: "Information about administrator who issued this feed, if available.",
+                  nullable: true,
+              }),
+          )
+          public async registeredAdmin(
+              @Ctx() ctx: IContext,
+              @Info() info: GraphQLResolveInfo,
+              @Root() feed: Feed,
+          ): Promise<Admin | null> {
+              if (feed.row.registeredAdminKey === null) {
+                  return null;
+              }
+
+              const r = await Q(ctx, info, { key: feed.row.registeredAdminKey }); // This single call will take care of parsing resolve-info, generating SQL query, running SQL query, formating query result to GraphQL entity object format.
+              if (r.queryResult.registeredAdmin !== null) {
+                  return entityBuilder(r.queryResult.registeredAdmin, Admin); // This call will wrap plain-but-formatted object to GraphQL entity class.
+              }
+
+              return null;
+          }
+
+          // #endregion
+
+          // #region Queries
+
+          @Visibility(
+              [Endpoint.Admin],
+              Query(() => Feed, {
+                  nullable: true,
+              }),
+          )
+          public async feed(
+              @Ctx() ctx: IContext,
+              @Info() info: GraphQLResolveInfo,
+              @Arg("id", () => ID, { description: "ID of feed to fetch data." })
+              id: string,
+          ): Promise<Feed | null> {
+              const r = await Q(ctx, info); // This single call will take care of parsing resolve-info, generating SQL query, running SQL query, formating query result to GraphQL entity object format.
+              if (!r.queryResult.feed) {
+                  return null;
+              }
+              return entityBuilder(r.queryResult.feed, Feed); // This call will wrap plain-but-formatted object to GraphQL entity class.
+          }
+          
+          // #endregion
+      }
+
+      ```
 
 #### 이미지 제공 전용 서버 개발 및 CDN 연동
-
-(TODO: URL, image transform result gif로 만들어서 첨부)
 
 이 프로젝트를 진행하기 전에는 사용자가 이미지를 어떤 용도로든 업로드하게 되면, 실제로 사용될 이미지의 크기에 맞춰 미리 서버에서 변환한 후에 원본 이미지를 보관하지 않는 방식으로 처리했습니다. 그러나 원본 정보의 손실 및 미리 변환하는 overhead에서 나오는 사용자 경험 저하, 지원해야 하는 사이즈가 커질 경우에 대비하기 어려운 점 등의 문제가 있었습니다. 따라서 이를 해결하기 위해 원본 이미지를 보관함과 더불어 요청에 맞게 이미지를 resizing 및 transform 후 제공하는 서비스를 만들었습니다. 또한 이와 함께 트래픽 비용 절감을 위해 요청 가능한 이미지의 사이즈를 미리 정해 해당 이미지들이 caching이 가능하도록 한 다음 CDN까지 연결해서 실제 이미지 전용 서버로 들어오는 트래픽과 비용의 감소, 전체 서비스 단위에서의 비용 감소를 달성할 수 있었습니다.
 

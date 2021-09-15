@@ -16,6 +16,8 @@
   - (Expected) Graduation: Feb. 2022. (Bachelor's)
   - GPA: 3.69/4.3 (as of Aug. 2021.)
 
+---
+
 ## Work Experience
 
 ### (주)오너클랜
@@ -305,34 +307,17 @@ Examples:
     - 대량 문자메시지 발송 프로그램 제작 및 OpenAPI 연동
   - 혼자 연습삼아 만들었던 것들을 제외하고는 실제로 쓰기 위해 학교 외부에서 진행한 첫 프로젝트인만큼 많은 부분을 구현하지는 않았으나 여러가지 기본적인 개념을 익힐 수 있었던 프로젝트 참여였습니다.
 - 자기소개서 작성 지원 웹서비스 개발
-  - (TODO: 작동 이미지 추가)
   - .NET Framework와 C#으로 개발한 프로젝트입니다. 규모는 작으나 DB 스키마 설계부터 서버 작업 및 [Razor Syntax](https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-5.0) 기반으로 간단한 프론트엔드까지 직접 제작했습니다. 제공하는 기능은 다음과 같습니다.
     - 사용자의 경우 회원가입 / 자기소개서 작성 및 저장 / 자기소개서 인쇄 기능
     - 관리자의 경우 사용자가 동의한 자기소개서 열람 / 회원 관리 / 자기소개서 작성 관련 정보 편집 기능
   - 당시에 React/Vue 등을 접하지 못해 별도의 프론트엔드 프레임워크는 사용하지 않았고 ASP.NET에서 제공하는 Razor syntax를 활용해서 MVC 구조로 개발했습니다.
-- 도서 원고 버전관리 웹서비스
-  - TODO:
-- 고등학교 수학 기출문제 분류 관리 웹서비스
-  - TODO:
 - 고등학생 대상 수학 강의
 
 #### 2013.12 - 2016.01
 
 - 마케팅 외주 업무 지원
 
-## Personal / Toy projects
-
-### Periodic Dataloader
-
-- TODO:
-
-### FSharp Linear Algebra
-
-- TODO:
-
-### Hml Equation Parser
-
-- TODO:
+---
 
 ## Skills
 

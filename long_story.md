@@ -311,11 +311,46 @@ Examples:
     - 사용자의 경우 회원가입 / 자기소개서 작성 및 저장 / 자기소개서 인쇄 기능
     - 관리자의 경우 사용자가 동의한 자기소개서 열람 / 회원 관리 / 자기소개서 작성 관련 정보 편집 기능
   - 당시에 React/Vue 등을 접하지 못해 별도의 프론트엔드 프레임워크는 사용하지 않았고 ASP.NET에서 제공하는 Razor syntax를 활용해서 MVC 구조로 개발했습니다.
+  - Screenshots: ![예시 4종](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/ResumeBible_Detail.png)
+- 도서 원고 버전관리 웹서비스
+  - .NET Framework와 C#으로 개발한 프로젝트입니다.
+  - 스타트업에서 운영하던 학원에서 사용할 자체 제작 교재들, 혹은 외부 출판사와 계약하여 판매되는 도서들의 원고 작업을 할 때 작업물의 버전 관리를 도와주는 서비스입니다.
+    - 대부분의 원고는 HWP 파일로 작업이 진행되었고, 컴퓨터공학 비전공자가 당연히 대다수였기 때문에 git을 통해 관리하기가 용이하지 않았습니다. 또한 원고 작성에 참여하는 사람들이 각자 자신의 파일을 들고있으면 자신의 작업 분량에 대해서도 최신 파일과 이전 이력들을 기록하기 쉽지는 않고, 다른 사람들의 작업 내용을 쉽게 보기가 어려웠습니다.
+    - 따라서 이런 문제를 해결하기 위해 자신이 작업한 파일을 업로드만 하면 자동으로 모든 버전들이 보관되고 각자가 업로드한 파일과 도서 제작 작업 과정에 따른 이력도 쉽게 파악할 수 있도록 서비스를 제작했습니다.
+- 고등학교 수학 기출문제 분류 관리 웹서비스
+  - .NET Framework와 C#으로 개발한 프로젝트입니다.
+  - 교재 제작과 학원 자체적으로 사용하기 위해 수능과 모의고사의 수학 기출문제들을 자체적인 기준에 따라서 분류하는 작업을 진행했는데, 이 작업 과정에서 어떤 분류에 해당하는지를 판단하는 것에만 집중할 수 있도록 나머지 과정을 최대한 줄여주는 방향으로 개발된 서비스입니다.
+    - 문제 유형을 분류할 때 각 문제의 유형 정보를 가장 큰 분류부터 가장 작은 분류까지 기록하고 출처도 정확하게 기록해야 했습니다. 또한 출처는 범위가 정해져 있지만, 유형 분류의 경우 작업을 진행하다보면 새롭게 유형을 만들거나 기존에 분류했던 것들을 빠르게 다시 보고 재분류해야 하는 경우도 많았습니다. 또한 유형 데이터도 사람이 기억하고 있기에는 많은 데이터였고 문제의 내용도 자주 찾아보고 읽을 필요가 있었습니다.
+    - 이러한 요구사항을 반영해서 사람은 최대한 문제 분류에만 집중할 수 있도록 분류 입력이나 다른 부분을 최대한 자동화하고 최대한 적은 수의 화면에서 필요한 데이터를 많이 볼 수 있도록 구성한 서비스를 제작했습니다.
 - 고등학생 대상 수학 강의
 
 #### 2013.12 - 2016.01
 
 - 마케팅 외주 업무 지원
+
+## Personal / Toy projects
+
+### Periodic Dataloader
+
+- Typescript로 만든, 특정 주기마다 load function을 실행할 수 있는 dataloader입니다. GraphQL 방식의 API를 구현할 때 graphqljs에서 제공하는 dataloader에 해당 기능이 없어서 직접 사용하려고 만든 뒤 일반적으로 사용할 수 있도록 약간의 변형을 거쳐서 public package로 배포했습니다.
+- 기존 Dataloader에 없던 기능 중 추가한 2개의 기능은 다음과 같습니다.
+  - Periodic execution of batch load function: Load를 기다리는 key가 있을 경우에, 주어진 시간 간격마다 batch load function을 실행하는 기능입니다. 현재 [graphql dataloader v2.0.0](https://github.com/graphql/dataloader/releases/tag/v2.0.0)에서는 이 기능을 `batchScheduleFn` 기능을 통해 제공합니다.
+  - Unique keys only to batch load function: Load를 기다리는 key가 있을 경우에, 모든 key를 batch load function에 넘겨주는 대신 unique key들만 골라서 이들에 대해서만 batch load function을 실행하게 하는 기능입니다. 대부분의 RDBMS를 포함해 많은 경우에는 dataloader보다 아래 레이어에서 이를 충분히 효율적으로 처리할 수 있지만 그렇지 않은 레이어에 의존하는 경우 이 기능을 사용하면 불필요한 오버헤드를 줄일 수 있고 중복된 key가 매우 많은 경우에는 네트워크 사용량도 줄일 수 있는 이점을 제공합니다.
+- [Github Repository](https://github.com/amoretspero/periodic-dataloader)
+
+### FSharp Linear Algebra
+
+- F#을 처음 접하고 간단한 라이브러리를 구현해보고 싶어 대학교 수업시간에 배운 선형대수의 개념들을 일부나마 직접 구현해 본 라이브러리 입니다. 배운 내용의 복습과 F#에 조금 더 익숙해지는 데 도움이 되었습니다.
+- [Github Repository](https://github.com/amoretspero/FSharp_Linear_Algebra)
+
+### Hml Equation Parser
+
+- 한글 문서에서 수식 부분만 추출해내어 사용할 일이 있어 기존에 다른 곳에서 개발해서 오픈소스로 공개한 repository를 fork해서 기능을 더 보완했습니다.
+- 기본적으로 한글에서 수식을 입력할 때 사용하는 string을 LaTeX math string으로 변환해주는 기능입니다. 자세한 내용은 아래 repository를 참조해주시면 됩니다.
+- [Github Repository](https://github.com/amoretspero/hml-equation-parser)
+- Example:
+  - 이미지의 아래 부분에 있는 내용을 한글 Hml 파일에 입력한 후, 해당 파일을 parsing하면 위의 결과물을 얻을 수 있습니다. Html 렌더링은 KaTeX를 사용했습니다.
+  - Image: ![Hml Equation Parser](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/HmlParser.PNG)
 
 ---
 

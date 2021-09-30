@@ -401,3 +401,9 @@ Examples:
   - GraphQL
   - Machine Learning(incl. Deep Learning)
   - Quantum Computing
+
+---
+
+Thank you for reading this portfolio.
+
+You can see the github version at: [Github Link](https://github.com/amoretspero/portfolio/blob/main/long_story.md)

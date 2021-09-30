@@ -90,7 +90,41 @@
 - 학원 수강생 관리 시스템 제작 (Ruby on Rails)
   - 수강생 및 결제/등록 이력 DB 설계
   - 대량 문자메시지 발송 프로그램 제작 및 OpenAPI 연동
+- 자기소개서 작성 지원 웹서비스 개발
+  - 사용자의 경우 회원가입 / 자기소개서 작성 및 저장 / 자기소개서 인쇄 기능을,
+  - 관리자의 경우 사용자가 동의한 자기소개서 열람 / 회원관리 / 자기소개서 관련 정보 추가 및 편집 기능을 제공.
+  - .NET Framework와 C#으로 개발되었으며, 프론트엔드는 Razor 기반으로 간략하게 제작.
+- 도서 원고 버전관리 웹서비스 개발
+  - 회사에서 제작한 내부용 혹은 외부 출판용 도서 원고의 버전 관리를 지원.
+  - 여러 명이 작업할 경우 개인이 작업한 파일을 업로드하면 자동으로 모든 버전이 보관되고 도서 제작 작업 과정에 따른 이력을 쉽게 파악할 수 있도록 제공.
+  - .NET Framework와 C#으로 개발.
+- 고등학교 수학 기출문제 분류 및 관리 웹서비스
+  - 교재 제작과 스타트업에서 운영하는 학원에서 사용하기 위해 수능 및 모의고사 수학 기출문제를 자체적인 기준에 따라 분류하고 결과를 제공하는 웹서비스 제작.
+  - 사용자가 최대한 문제 이해와 카테고리 분류에만 집중할 수 있도록 나머지 과정을 최대한 줄여주도록 지원하는 것을 목적으로 함.
+  - .NET Framework와 C#으로 개발.
 - 고등학생 대상 수학 강의
+
+## Personal / Toy projects
+
+### Periodic Dataloader
+
+- Typescript로 만든, 특정 주기마다 load function을 실행할 수 있는 dataloader.
+- GraphQL 방식의 API를 구현할 때 graphqljs에서 제공하는 dataloader에 해당 기능이 없어서 직접 사용하려고 만든 뒤 일반적으로 사용할 수 있도록 약간의 변형을 거쳐서 public package로 배포됨.
+- 기존 Dataloader에 없던 기능 중 추가한 2개의 기능
+  - Periodic execution of batch load function: Load를 기다리는 key가 있을 경우에, 주어진 시간 간격마다 batch load function을 실행하는 기능.
+  - Unique keys only to batch load function: Load를 기다리는 key가 있을 경우에, 모든 key를 batch load function에 넘겨주는 대신 unique key들만 골라서 이들에 대해서만 batch load function을 실행하게 하는 기능.
+- [Github Repository](https://github.com/amoretspero/periodic-dataloader)
+
+### FSharp Linear Algebra
+
+- F#을 처음 접한 뒤, 간단한 라이브러리를 구현해보고 싶어 대학교 수업시간에 배운 선형대수의 개념들을 일부나마 직접 구현해 본 라이브러리.
+- [Github Repository](https://github.com/amoretspero/FSharp_Linear_Algebra)
+
+### Hml Equation Parser
+
+- 한글 문서에서 수식 부분만 추출해내어 사용할 일이 있어 기존에 다른 곳에서 개발해서 오픈소스로 공개한 repository를 fork해서 기능을 더 보완한 프로그램.
+- 기본적으로 한글에서 수식을 입력할 때 사용하는 string을 LaTeX math string으로 변환해주는 기능을 지원.
+- [Github Repository](https://github.com/amoretspero/hml-equation-parser)
 
 ## Skills
 
@@ -139,3 +173,9 @@
   - GraphQL
   - Machine Learning
   - Quantum Computing
+
+---
+
+Thank you for reading this portfolio.
+
+You can see the github version at: [Github Link](https://github.com/amoretspero/portfolio/blob/main/tl_dr.md)

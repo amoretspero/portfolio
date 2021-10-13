@@ -6,6 +6,7 @@
 - Email: amoretspero (at) gmail (dot) com
   - Alternative: amoretspero (at) snu (dot) ac (dot) kr
 - Github: [https://github.com/amoretspero](https://github.com/amoretspero)
+- Leetcode: [https://leetcode.com/amoretspero](https://leetcode.com/amoretspero)
 
 ## Education
 
@@ -15,6 +16,11 @@
   - Enrollment: Mar. 2013.
   - (Expected) Graduation: Feb. 2022. (Bachelor's)
   - GPA: 3.69/4.3 (as of Aug. 2021.)
+
+## Military Service
+
+- 산업기능요원 복무만료
+  - Industrial Technical Personnel, Released from call on 19 Sep. 2020
 
 ---
 
@@ -57,7 +63,7 @@
   - Cloud Service Provider: [Google Cloud Platform](https://cloud.google.com/)
     - GCP Kubernetes Engine를 사용해 프로토타입 개발 및 초기 서비스 운영 후, 네트워크 트래픽 등의 문제로 사내 서버로 이전해서 운영했습니다.
 
-Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 PM2 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 비교적 단순하면서 API call 수가 많은 부분은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 했습니다. API request 수는 적지만 하나의 request가 많은 overhead를 갖는 경우에 다른 API request 처리에 병목을 발생시키지 않도록 하는 데 도움이 되었습니다.
+Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 PM2 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 DB에 부하가 적지만 API call 수가 많은 부분은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 함으로써 API call 수는 적지만 하나의 request가 많은 DB operation overhead를 갖는 request들이 다른 API request 처리에 의해 병목현상을 겪지 않도록 하는 데 도움이 되었습니다.
   
 이와 함께 Quota 제한을 위해 [Redis](https://redis.io/) 기반의 사용량 제한 기능을 추가해서 비정상적이거나 서버가 감당할 수 없는 트래픽을 막고, 소수의 사용자에 의해 리소스가 점유되지 않도록 했습니다.
 
@@ -85,7 +91,10 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
   - 리뉴얼에 필요한 DB migration 코드 작성 일부를 담당했습니다.
 - Node.js 및 TypeScript, GraphQL을 기반으로 한 API 서버 구현
   - GraphQL API type 정의 및 resolver 구현 등 GraphQL을 기반으로 한 API 서버에서 구현해야 하는 대부분을 담당했습니다.
-  - API 서버에서 DB 데이터를 가져오는 부분은 TypeORM에서 제공하는 기능을 통해 해결하려고 했으나, 개발을 진행하면서 속도가 지나치게 느리다는 단점을 발견했습니다. 이를 해결하기 위해 상대적으로 DB data write/read operation time의 영향이 적은 데이터 수정 및 삭제 작업은 그대로 TypeORM을 사용하고, 빠른 응답이 필요한 데이터 읽기와 관련된 부분에서는 TypeORM 대신 node.js에서 사용할 수 있는 mysql driver([node-mysql](https://github.com/mysqljs/mysql))을 이용했습니다. 하지만 이 경우 직접 작성해야 하는 코드가 늘어나는 단점이 있었기 때문에 이 문제를 해결하기 위해 직접 GraphQL `query`에 대한 TypeScript decorator 기반의 query-format wrapper를 구현하고 프로젝트에서 사용했습니다. 이 wrapper를 사용한 결과 몇 개의 decorator를 추가하고 특수한 경우들에 대해서만 DB 관련 코드를 작성하면 되었고, 결과적으로 GraphQL API 서비스 개발시 data fetch/format 과정의 코드를 절반 이상 감소시킬 수 있었습니다.
+  - API 서버에서 DB 데이터를 가져오는 부분은 이미 DB schema를 정의하는 데 사용해서 type 재활용이 가능하다는 점을 포함, 분명한 이점이 있다고 생각했기 때문에 TypeORM에서 제공하는 기능을 통해 해결하려고 했습니다. 프로젝트 시작 당시에 파악한 결과로도 ORM이 정상적으로 작동한다면 기존 서비스의 로드를 충분히 견딜 수 있고 ORM이 제공하는 개발 상의 편리함들을 포기하면서까지 성능을 추구하지는 않아도 되었습니다.
+  - 하지만 개발을 진행하면서 여러 relation을 참조하는 entity들을 불러오는 경우에 속도가 지나치게 느린, relation 수에 비례해 거의 지수적으로 느리다고 볼 수 있는 문제를 발견했습니다. 패키지의 소스코드를 보면서 분석한 결과 enttity manager에서 불러올 relation을 지정하는 경우, 여러 개의 query를 실행해서 필요한 정보를 불러오는 방식이 훨씬 빠른 경우에도 하나의 query에 left join을 여러 개 사용하는 방식으로 데이터를 로드하려고 하기 때문임을 알 수 있었습니다. 정식 릴리즈가 이루어지지 않은 베타 버전의 ORM을 사용한 프로젝트 팀의 결정이 문제이기는 했지만, 이 문제 때문에 ORM이 주었던 다른 이점들을 포기하기는 어려웠습니다.
+  - 결국 이를 해결하기 위해 상대적으로 DB data write/read operation time의 영향이 적은 데이터 수정 및 삭제 작업은 그대로 TypeORM을 사용하고, 빠른 응답이 필요한 데이터 읽기와 관련된 부분에서는 TypeORM 대신 node.js에서 사용할 수 있는 mysql driver([node-mysql](https://github.com/mysqljs/mysql))을 이용했습니다. 하지만 이 경우 직접 작성해야 하는 코드가 늘어나는 단점이 있었습니다.
+  - 실행 속도가 느린 문제와 작성할 코드 양이 늘어나는 문제를 동시에 해결하기 위해 직접 GraphQL `query`에 대한 TypeScript decorator 기반의 query-format wrapper를 구현하고 프로젝트에서 사용했습니다. GraphQL API query 에서 SQL query를 만들고 이를 실행한 뒤 결과를 다시 GraphQL entity object로 변환하는 과정을 한 번에 수행할 수 있는 wrapper였습니다. GraphQL 구현체의 일부와 ORM의 query builder/runner 일부를 직접 구현해야 하는 만큼 공부해야 할 것도 많고 시간도 오래 걸렸습니다. 하지만 최종적으로 완성시킨 뒤, 이 wrapper를 사용한 결과 하나의 class와 몇 개의 decorator를 추가하고 특수한 경우들에 대해서만 DB 관련 코드를 작성하면 되었습니다. 결과적으로 GraphQL API 서비스 개발시 data fetch/format 과정의 코드를 절반 이상 감소시키며 필요한 로직의 구현에만 집중할 수 있었습니다.
   - query-format wrapper example:
     - DB schema code:
       ```typescript
@@ -142,13 +151,18 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
       ```
     - GraphQL entity code:
       ```typescript
-      @DbEntity(model.Feed) // This is for query-format wrapper to know DB model's `Feed` is connected to this class that defines GraphQL entity.
+      // This is for query-format wrapper to know
+      // DB model's `Feed` is connected to this class that defines GraphQL entity.
+      @DbEntity(model.Feed)
       @ObjectType({ description: "Feed", implements: Node })
       export class Feed extends SingleKeyNode {
           @Field({ description: "The time when this feed is created." })
           public createdAt!: Date;
 
-          @Field(() => GraphQLTimestamp, { nullable: true, description: "The time when this feed is checked." })
+          @Field(() => GraphQLTimestamp, {
+            nullable: true,
+            description: "The time when this feed is checked.",
+          })
           public checkedAt?: Date | null;
 
           @Field(() => model.FeedResourceType, { description: "Type of resource." })
@@ -160,20 +174,30 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
           @Field(() => model.FeedSeverity, { description: "Severity of feed." })
           public severity!: model.FeedSeverity;
 
-          @Field(() => model.FeedEndpoint, { nullable: true, description: "If endpoint is specified, target endpoint." })
+          @Field(() => model.FeedEndpoint, {
+            nullable: true,
+            description: "If endpoint is specified, target endpoint.",
+          })
           public endpoint?: model.FeedEndpoint | null;
 
           public row: any;
 
-          @DbColumn({ selects: ["audienceKeys"] }) // This is for query-format wrapper to query specific column when this field is specified in GraphQL request.
-          @Field(() => [ID], { nullable: true, description: "If targeted to specific users, targets' IDs." })
+          // This is for query-format wrapper to query specific column
+          // when this field is specified in GraphQL request.
+          @DbColumn({ selects: ["audienceKeys"] })
+          @Field(() => [ID], {
+            nullable: true,
+            description: "If targeted to specific users, targets' IDs.",
+          })
           public audienceIds(): string[] | null {
               return this.row.audienceKeys === null ? null : (this.row.audienceKeys as string).split(",")
                   .filter((rk) => rk && !/^\s*$/.test(rk))
                   .map((rk) => toGlobalId("User", [rk]));
           }
 
-          @DbColumn({ selects: ["resourceKeys", "resourceType"] }) // This is for query-format wrapper to query specific columns when this field is specified in GraphQL request.
+          // This is for query-format wrapper to query specific columns
+          // when this field is specified in GraphQL request.
+          @DbColumn({ selects: ["resourceKeys", "resourceType"] })
           @Field(() => [ID], { description: "If related resource exist, related resources' IDs." })
           public resourceIds(): string[] {
               return (this.row.resourceKeys as string).split(",")
@@ -211,9 +235,15 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
                   return null;
               }
 
-              const r = await Q(ctx, info, { key: feed.row.registeredAdminKey }); // This single call will take care of parsing resolve-info, generating SQL query, running SQL query, formating query result to GraphQL entity object format.
+              // This single call will take care of
+              // 0. parsing resolve-info,
+              // 1. generating SQL query,
+              // 2. running SQL query,
+              // 3. formating query result to GraphQL entity object format.
+              const r = await Q(ctx, info, { key: feed.row.registeredAdminKey });
               if (r.queryResult.registeredAdmin !== null) {
-                  return entityBuilder(r.queryResult.registeredAdmin, Admin); // This call will wrap plain-but-formatted object to GraphQL entity class.
+                  // This call will wrap plain-but-formatted object to GraphQL entity class.
+                  return entityBuilder(r.queryResult.registeredAdmin, Admin);
               }
 
               return null;
@@ -235,11 +265,17 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
               @Arg("id", () => ID, { description: "ID of feed to fetch data." })
               id: string,
           ): Promise<Feed | null> {
-              const r = await Q(ctx, info); // This single call will take care of parsing resolve-info, generating SQL query, running SQL query, formating query result to GraphQL entity object format.
+              // This single call will take care of
+              // 0. parsing resolve-info,
+              // 1. generating SQL query,
+              // 2. running SQL query,
+              // 3. formating query result to GraphQL entity object format.
+              const r = await Q(ctx, info);
               if (!r.queryResult.feed) {
                   return null;
               }
-              return entityBuilder(r.queryResult.feed, Feed); // This call will wrap plain-but-formatted object to GraphQL entity class.
+              // This call will wrap plain-but-formatted object to GraphQL entity class.
+              return entityBuilder(r.queryResult.feed, Feed);
           }
           
           // #endregion
@@ -249,7 +285,7 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
 
 #### 이미지 제공 전용 서버 개발 및 CDN 연동
 
-이 프로젝트를 진행하기 전에는 사용자가 이미지를 어떤 용도로든 업로드하게 되면, 실제로 사용될 이미지의 크기에 맞춰 미리 서버에서 변환한 후에 원본 이미지를 보관하지 않는 방식으로 처리했습니다. 그러나 원본 정보의 손실 및 미리 변환하는 overhead에서 나오는 사용자 경험 저하, 지원해야 하는 사이즈가 커질 경우에 대비하기 어려운 점 등의 문제가 있었습니다. 따라서 이를 해결하기 위해 원본 이미지를 보관함과 더불어 요청에 맞게 이미지를 resizing 및 transform 후 제공하는 서비스를 만들었습니다. 또한 이와 함께 트래픽 비용 절감을 위해 요청 가능한 이미지의 사이즈를 미리 정해 해당 이미지들이 caching이 가능하도록 한 다음 CDN까지 연결해서 실제 이미지 전용 서버로 들어오는 트래픽과 비용의 감소, 전체 서비스 단위에서의 비용 감소를 달성할 수 있었습니다.
+이 프로젝트를 진행하기 전에는 사용자가 이미지를 어떤 용도로든 업로드하게 되면, 실제로 사용될 이미지의 크기에 맞춰 미리 서버에서 변환한 후에 원본 이미지를 보관하지 않는 방식으로 처리했습니다. 그러나 원본 정보의 손실 및 미리 변환하는 overhead에서 나오는 사용자 경험 저하, 지원해야 하는 사이즈가 커질 경우에 대비하기 어려운 점 등의 문제가 있었습니다. 따라서 이를 해결하기 위해 원본 이미지를 이중으로 보관함과 더불어 요청에 맞게 이미지를 resizing 및 transform 후 제공하는 서비스를 만들었습니다. 또한 이와 함께 트래픽 비용 절감을 위해 요청 가능한 이미지의 사이즈를 미리 정해 해당 이미지들이 caching이 가능하도록 한 다음 CDN까지 연결해서 실제 이미지 전용 서버로 들어오는 트래픽과 비용의 감소, 전체 서비스 단위에서의 비용 감소를 달성할 수 있었습니다.
 
 - Skills
   - Server Runtime: Node.js
@@ -264,7 +300,7 @@ PHP로 구현되어있던 기존 웹 서비스에 새롭게 추가해야 하는 
   - `image_name`이라는 이미지를 가로 `1920`, 세로 `1080`으로 resizing한 후 `90`도 회전한 다음에 `new_image.jpg`라는 이름으로 응답하기를 요청하는 경우
   - `https://cdn.example.com/image_name/resize/1920/1080/rotate/90/as/new_image.jpg`
 - GCP Kubernetes Engine에서 제공하는 Cluster auto-scaling / Container pod auto-scaling를 적용해서 부하가 많으면 Cluster의 VM 수와 pod 숫자를 늘려서 대응하고 부하가 적으면 줄여서 비용을 절감하도록 했습니다.
-  - Cluster와 Pod size의 경우 급격하게 로드가 증가할 때 일정 수준 이하의 response time을 확보하기 위해서 PAESSLER의 [Webserver Stress Tool](https://www.paessler.com/tools/webstress)를 사용해 stress test를 간단하게나마 진행한 결과를 반영했습니다. 예상 가능한 최대 부하를 기준으로 테스트를 진행했을 때 Up scaling이 진행되는 중에도 response time이 허용치를 넘어가는 경우는 일정 수준 이하가 되도록 Cluster와 pod의 minimum size를 지정했습니다.
+  - Auto-scaling을 사용할 때는 cluster와 Pod size를 포함한 여러 scaling policy의 값들이 필요했습니다. 급격하게 로드가 증가하는 상황에서도 일정 수준 이하의 response time을 확보할 수 있는 데이터들이 필요했고, 이를 추정하기 위해 PAESSLER의 [Webserver Stress Tool](https://www.paessler.com/tools/webstress)를 사용해 stress test를 간단하게나마 진행한 결과를 반영했습니다. 예상 가능한 최대 부하를 기준으로 테스트를 진행했을 때 Up scaling이 진행되는 중에도 response time이 허용치를 넘어가는 경우는 일정 수준 이하가 되도록 여러 factor들의 값을 지정했습니다.
 
 Examples:
 - Original image: ![Original image](https://raw.githubusercontent.com/amoretspero/portfolio/main/assets/coffee.jpg)

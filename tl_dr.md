@@ -6,6 +6,7 @@
 - Email: amoretspero (at) gmail (dot) com
   - Alternative: amoretspero (at) snu (dot) ac (dot) kr
 - Github: [https://github.com/amoretspero](https://github.com/amoretspero)
+- Leetcode: [https://leetcode.com/amoretspero](https://leetcode.com/amoretspero)
 
 ## Education
 
@@ -16,11 +17,17 @@
   - (Expected) Graduation: Feb. 2022. (Bachelor's)
   - GPA: 3.69/4.3 (as of Aug. 2021.)
 
+## Military Service
+
+- 산업기능요원 복무만료
+  - Industrial Technical Personnel, Released from call on 19 Sep. 2020
+
 ## Work Experience
 
 ### (주)오너클랜
 
-- 회사 주요 업무: 오픈마켓에서 활동하는 소규모 판매자들을 위한 도매 중개업  
+- 회사 주요 업무: 오픈마켓에서 활동하는 소규모 판매자들을 위한 도매 중개업
+- 2017.08.21 - 2020.09.29
 
 #### Internal / Open API 서비스 및 서버 개발
 
@@ -80,6 +87,7 @@
 ### (주)스카이시드
 
 - 회사 주요 업무: 웹서비스 개발 및 마케팅 외주 / 학원업
+- 2013.12.01 - 2017.08.07
 
 #### 2013.12 - 2016.01
 

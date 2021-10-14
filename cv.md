@@ -2,7 +2,7 @@
 
 ## Introduction
 
-- Name: Jiung Hahm
+- Name: Jiung Hahm (함지웅)
 - Email: amoretspero (at) gmail (dot) com
   - Alternative: amoretspero (at) snu (dot) ac (dot) kr
 - Github: [https://github.com/amoretspero](https://github.com/amoretspero)

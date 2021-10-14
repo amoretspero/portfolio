@@ -2,7 +2,7 @@
 
 ## Introduction
 
-- Name: Jiung Hahm
+- Name: Jiung Hahm (함지웅)
 - Email: amoretspero (at) gmail (dot) com
   - Alternative: amoretspero (at) snu (dot) ac (dot) kr
 - Github: [https://github.com/amoretspero](https://github.com/amoretspero)
@@ -63,7 +63,7 @@
   - Cloud Service Provider: [Google Cloud Platform](https://cloud.google.com/)
     - GCP Kubernetes Engine를 사용해 프로토타입 개발 및 초기 서비스 운영 후, 네트워크 트래픽 등의 문제로 사내 서버로 이전해서 운영했습니다.
 
-Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 PM2 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 DB에 부하가 적지만 API call 수가 많은 부분은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 함으로써 API call 수는 적지만 하나의 request가 많은 DB operation overhead를 갖는 request들이 다른 API request 처리에 의해 병목현상을 겪지 않도록 하는 데 도움이 되었습니다.
+Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 [PM2](https://pm2.keymetrics.io/) 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 DB에 부하가 적지만 API call 수가 많은 부분은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 함으로써 API call 수는 적지만 하나의 request가 많은 DB operation overhead를 갖는 request들이 다른 API request 처리에 의해 병목현상을 겪지 않도록 하는 데 도움이 되었습니다.
   
 이와 함께 Quota 제한을 위해 [Redis](https://redis.io/) 기반의 사용량 제한 기능을 추가해서 비정상적이거나 서버가 감당할 수 없는 트래픽을 막고, 소수의 사용자에 의해 리소스가 점유되지 않도록 했습니다.
 

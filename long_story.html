@@ -95,7 +95,7 @@
 </ul>
 </li>
 </ul>
-<p>Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 <a href="https://pm2.keymetrics.io/">PM2</a> 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 DB에 부하가 적지만 API call 수가 많은 부분은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 함으로써 API call 수는 적지만 하나의 request가 많은 DB operation overhead를 갖는 request들이 다른 API request 처리에 의해 병목현상을 겪지 않도록 하는 데 도움이 되었습니다.</p>
+<p>Open API까지 서비스를 시작한 후, 운영 시 일평균 2M requests, 초당 최대 150-200 requests 정도가 처리되었습니다. 사내에서 API 서비스 전용으로 할당받은 서버를 1개 사용했고, Node.js의 클러스터 기능과 <a href="https://pm2.keymetrics.io/">PM2</a> 패키지를 사용해서 서버 리소스를 최대한 효율적으로 사용할 수 있도록 구성했습니다. 또한 DB에 부하가 크거나 데이터 검증 등에 의해 실행 시간이 많이 필요한 request들은 Node.js Worker를 사용해서 별도의 thread pool이 처리하도록 함으로써 API call 수는 적지만 하나의 request가 많은 operation overhead를 갖는 request들이 다른 API request 처리에 병목현상을 주지 않도록 하는 데 도움이 되었습니다.</p>
 <p>이와 함께 Quota 제한을 위해 <a href="https://redis.io/">Redis</a> 기반의 사용량 제한 기능을 추가해서 비정상적이거나 서버가 감당할 수 없는 트래픽을 막고, 소수의 사용자에 의해 리소스가 점유되지 않도록 했습니다.</p>
 <p>API 서비스 오픈 후 회사 서비스 사용자들 중 Open API를 사용해서 개발할 수 있는 여력이 되는 사용자들이 API 서비스를 적극적으로 사용하도록 유도한 결과, 웹사이트의 불필요한 스크랩 트래픽을 80% 이상 감소시켜 웹서비스 퀄리티 유지에도 도움이 되었습니다.</p>
 <h4 id="%ED%9A%8C%EC%82%AC-%EC%A3%BC%EC%9A%94-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%A6%AC%EB%89%B4%EC%96%BC-%EC%9E%91%EC%97%85---%EB%B0%B1%EC%97%94%EB%93%9C">회사 주요 서비스 리뉴얼 작업 - 백엔드</h4>
